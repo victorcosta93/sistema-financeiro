@@ -4,15 +4,12 @@ $obj = new ControllerLogon();
 
 if(isset($_POST['email']) && isset($_POST['senha'])){
     if(!empty(trim($_POST['email'])) && !empty(trim($_POST['senha']))){
-
         $obj->logar($_POST['email'], $_POST['senha']);
-
     }
     else{
         echo "Não logou.";
     }
 }
-
 ?>
 <!DOCTYPE html>
 <html lang="pt">

@@ -1,4 +1,4 @@
-<?php
+<?php session_start();
 include ('../biblioteca/Verifica.php');
 $verifica = new Verifica();
 $verifica->validarAcesso();
@@ -33,7 +33,7 @@ $verifica->validarAcesso();
                 </div>
                 <ul class="nav navbar-right top-nav">
                      <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> Olá <b class="caret"></b></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> Olá <?php echo $_SESSION['nm_usuario']?> <b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li>
                                 <a href="#"><i class="fa fa-fw fa-user"></i> Meus dados</a>
