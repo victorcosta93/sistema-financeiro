@@ -1,4 +1,27 @@
 <?php session_start();
+include_once ("../controller/ControllerTransacao.php");
+$transacao = new ControllerTransacao();
+$transacao->consultarTipoTransacao($_SESSION['cd_usuario']);
+$transacao->consultarTipoConta($_SESSION['cd_usuario']);
+$transacao->consultarAcaoFinanceira();
+
+
+if (isset($_POST['ds_transacao']) && isset($_POST['data_transacao'])&& isset($_POST['tipo_transacao']) && isset($_POST['cd_conta'])
+    && isset($_POST['cd_acao']) && isset($_POST['valor_transacao'])){
+
+    if(!empty(trim($_POST['ds_transacao'])) && !empty(trim($_POST['data_transacao'])) && !empty(trim($_POST['tipo_transacao']))
+        && !empty(trim($_POST['cd_conta'])) && !empty(trim($_POST['cd_conta'])) && !empty(trim($_POST['valor_transacao']))){
+
+        $transacao->pegarDados($_POST['ds_transacao'], $_POST['data_transacao'], $_POST['tipo_transacao'], $_POST['cd_conta'], $_POST['cd_conta']
+        , $_POST['valor_transacao'], $_SESSION['cd_usuario']);
+
+    }else{
+        echo "<script>
+                alert('Preencha todos os campos corretamente, por favor.');
+                document.location.href = '../view/nova_transacao.php';
+            </script>";
+    }
+}
 
 ?>
 <!DOCTYPE html>
@@ -16,6 +39,20 @@
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
         <link rel="icon" href="../biblioteca/icon.png" type="image/x-icon" />
         <link rel="shortcut icon" href="../biblioteca/icon.png" type="image/x-icon" />
+        <script type="text/javascript">
+
+            function validar(frmnovatransacao) {
+                var descricao = frmnovatransacao.ds_transacao.value;
+                var date = frmnovatransacao.data_transacao.value;
+                var valor = frmnovatransacao.valor_transacao.value;
+
+                if(descricao.trim()=="" || date.trim() == "" || valor.trim() == ""){
+                    alert('Preencha todos os campos corretamente.');
+                    frmnovatransacao.descricao.focus();
+                  }
+
+            }
+        </script>
     </head>
     <body>
         <div id="wrapper">
@@ -93,7 +130,7 @@
                     <div class="row">
                         <div class="col-lg-6">
                             <h2>Nova transação:</h2>
-                                    <form name= "frmemprestimo" action="../controller/ControllerNovaTransacao.php" method="post" accept-charset="utf-8">
+                                    <form name= "frmnovatransacao" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" accept-charset="utf-8" onsubmit="return validar(this)">
                                         <label for="text">Descrição *:</label>
                                         <input type="text" size="20" name="ds_transacao" class="form-control" >
                                         <br>
@@ -101,23 +138,37 @@
                                         <input type="Date"  name="data_transacao" class="form-control">
                                         <br>
                                         <label for="text">Tipo *:</label>
-                                        <input type="text"  name="tipo_transacao" class="form-control">
+                                        <select name="tipo_transacao" class="custom-select">
+                                            <?php foreach ($transacao->resultadoTipoTransacao as $listarTipoTransacao):?>
+                                            <option value="<?php echo $listarTipoTransacao['cd_tipo_transacao']?>"><?php echo $listarTipoTransacao['nm_tipo_transacao']?></option>
+                                            <?php endforeach ?>
+                                        </select>
+                                        <br>
                                         <br>
                                         <label for="text">Conta *:</label>
-                                        <input type="text" size="20" name="conta" class="form-control" >
+                                        <select name="cd_conta" class="custom-select">
+                                            <?php foreach ($transacao->resultadoConta as $listarConta):?>
+                                            <option value="<?php echo $listarConta['cd_conta']?>"><?php echo $listarConta['nm_conta']?></option>
+                                            <?php endforeach ?>
+                                        </select>
+                                        <br>
                                         <br>
                                         <label for="text">Ação *:</label>
-                                        <input type="text" size="20" name="tipo_acao" class="form-control" >
+                                        <select name="cd_acao" class="custom-select">
+                                            <?php foreach ($transacao->resultadoAcaoFinanceira as $listarAcao):?>
+                                            <option value="<?php echo $listarAcao['cd_acao_financeira']?>"><?php echo $listarAcao['nm_acao_financeira']?></option>
+                                            <?php endforeach ?>
+                                        </select>
+                                        <br>
                                         <br>
                                         <label for="text">Valor (R$) *:</label>
-                                        <input type="number" size="5" name="valor_transacao" class="form-control">
+                                        <input type="value" size="5" name="valor_transacao" class="form-control">
                                         <br>
                                         <div>
                                             <button style="background-color: black; border-color: #adadad; color: #e3e3e3;" type="submit" class="btn btn-defaul" name="acao" value="cadastrar" >Cadastrar</button>
                                         </div>
                                     </form>
                         </div>
-
                         <div class="col-lg-6">
                             <br>
                             <br>
