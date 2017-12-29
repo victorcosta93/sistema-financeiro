@@ -1,12 +1,21 @@
 <?php
+include_once("../biblioteca/Conexao.php");
 
-/**
- * Created by PhpStorm.
- * User: victo
- * Date: 28/12/2017
- * Time: 11:24
- */
-class ModelAcaoFinanceira
+class ModelAcaoFinanceira extends Conexao
 {
+    private $cd_acao_financeira;
+    private $nm_acao_financeira;
+    private $consultar;
+    public $resultado;
 
+    public function __construct()
+    {
+        $this->conexao();
+    }
+
+    public function consultarAcaoFinanceira(){
+        $this->consultar = $this->pdo->prepare("SELECT * FROM tb_acao_financeira ORDER BY nm_acao_financeira");
+        $this->consultar->execute();
+        $this->resultado = $this->consultar;
+    }
 }
