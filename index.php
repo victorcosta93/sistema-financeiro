@@ -1,5 +1,6 @@
 <?php
 include_once ("controller/ControllerLogon.php");
+
 $obj = new ControllerLogon();
 
 if(isset($_POST['email']) && isset($_POST['senha'])){
@@ -7,7 +8,10 @@ if(isset($_POST['email']) && isset($_POST['senha'])){
         $obj->logar($_POST['email'], $_POST['senha']);
     }
     else{
-        echo "Não logou.";
+        echo "<script>
+                alert('Preencha todos os campos corretamente.');
+                document.location.href = 'index.php';
+            </script>";
     }
 }
 ?>
